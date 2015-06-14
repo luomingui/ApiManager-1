@@ -15,13 +15,13 @@ namespace ApiManager
 
         #region Protected Properties
         protected readonly Uri _DefaultBaseUri;
-        protected HttpClient _ApiClient;
+        protected HttpClient _HttpClient;
         #endregion
 
         public AManager(Uri defaultBaseUri)
         {
             _DefaultBaseUri = defaultBaseUri;
-            _ApiClient = new HttpClient(new WebRequestHandler { AllowAutoRedirect = false })
+            _HttpClient = new HttpClient(new WebRequestHandler { AllowAutoRedirect = false })
                 {
                     BaseAddress = _DefaultBaseUri
                 };
