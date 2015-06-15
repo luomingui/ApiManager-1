@@ -13,15 +13,15 @@ namespace ApiManager
         public enum ResponseFormats { xml = 0, json = 1 }
         #endregion
 
-        #region Protected Properties
+        #region Fields
         protected readonly Uri _DefaultBaseUri;
-        protected HttpClient _HttpClient;
+        public HttpClient ApiClient;
         #endregion
 
         public AManager(Uri defaultBaseUri)
         {
             _DefaultBaseUri = defaultBaseUri;
-            _HttpClient = new HttpClient(new WebRequestHandler { AllowAutoRedirect = false })
+            ApiClient = new HttpClient(new WebRequestHandler { AllowAutoRedirect = false })
                 {
                     BaseAddress = _DefaultBaseUri
                 };
@@ -61,6 +61,23 @@ namespace ApiManager
             } while (resendRequest);
 
             return await responseMessage.Content.ReadAsStringAsync();
+        }
+
+        /// <summary>
+        /// Returns an object deserialized from response string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="httpClient"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public T GetResponseObject<T>(HttpClient httpClient, ARequest request)
+        {
+            return XmlManager.XmlManager.GetObjectFromXmlString<T>(
+                    GetResponseStringAsync(
+                        httpClient,
+                        request.ToString(),
+                        request.ResponseFormat).Result
+                );
         }
     }
 }
