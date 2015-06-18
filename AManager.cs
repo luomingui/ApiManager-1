@@ -46,7 +46,15 @@ namespace ApiManager
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(_MEDIA_TYPE + responseFormat));
                 
                 resendRequest = false;
-                responseMessage = httpClient.GetAsync(requestString).Result;
+                try
+                {
+                    responseMessage = httpClient.GetAsync(requestString).Result;
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+
                 switch (responseMessage.StatusCode)
                 {
                     case HttpStatusCode.Redirect:
